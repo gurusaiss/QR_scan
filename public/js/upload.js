@@ -184,6 +184,23 @@ document.getElementById('copyBtn').addEventListener('click', async () => {
     }
 });
 
+// Download QR Code
+document.getElementById('downloadQrBtn').addEventListener('click', () => {
+    const qrImage = document.getElementById('qrImage');
+    const shareUrl = document.getElementById('shareUrlInput').value;
+    const shareId = shareUrl.split('/').pop(); // Extract share ID from URL
+
+    // Create download link
+    const link = document.createElement('a');
+    link.href = qrImage.src;
+    link.download = `qr-code-${shareId}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showToast('QR code downloaded!', 'success');
+});
+
 // Show toast
 function showToast(message, type = 'success') {
     const toast = document.createElement('div');
