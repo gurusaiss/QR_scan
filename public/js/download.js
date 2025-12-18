@@ -163,6 +163,26 @@ function showDownloadPage() {
 
     // Setup download button
     document.getElementById('downloadAllBtn').addEventListener('click', downloadAll);
+
+    // AUTO-TRIGGER DOWNLOAD (works on Android/Desktop, requires tap on iOS)
+    // Attempt automatic download after a short delay
+    setTimeout(() => {
+        const downloadBtn = document.getElementById('downloadAllBtn');
+
+        // Try to trigger click programmatically (works on some browsers)
+        if (navigator.userAgent.match(/Android/i) || !navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+            // Android or Desktop - trigger automatic download
+            downloadBtn.click();
+        } else {
+            // iOS - show prominent message
+            document.getElementById('downloadTitle').innerHTML = '👆 Tap Below to Download';
+            document.getElementById('downloadTitle').style.color = '#6366f1';
+            document.getElementById('downloadTitle').style.fontSize = '1.8rem';
+
+            // Make button pulse to draw attention
+            downloadBtn.style.animation = 'pulse 1.5s infinite';
+        }
+    }, 500);
 }
 
 // Render file list
