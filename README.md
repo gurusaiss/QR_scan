@@ -185,6 +185,10 @@ git push heroku main
 
 MIT
 
+## 🔗 Repository
+
+GitHub: https://github.com/gurusaiss/QR_scan
+
 ## 🙋‍♂️ Support
 
 For issues or questions, check:

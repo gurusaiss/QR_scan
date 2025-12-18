@@ -47,12 +47,12 @@ git commit -m "Initial commit - QR Document Delivery System"
 Copy the commands from GitHub (should look like this, but with YOUR username):
 
 ```bash
-git remote add origin https://github.com/YOUR-USERNAME/qr-document-delivery.git
-git branch -M main
-git push -u origin main
-```
-
-> **Note**: Replace `YOUR-USERNAME` with your actual GitHub username
+   git remote add origin https://github.com/gurusaiss/QR_scan.git
+   git branch -M main
+   git push -u origin main
+   ```
+   
+   ✅ **Already completed!** Your code is live at https://github.com/gurusaiss/QR_scan
 
 ---
 
