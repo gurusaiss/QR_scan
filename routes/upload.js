@@ -96,9 +96,10 @@ router.post('/', upload.array('files'), async (req, res) => {
 
         // Generate share URL - use app's base URL
         const baseUrl = req.app.locals.baseUrl;
-        const shareUrl = `${baseUrl}/share/${shareId}`;
+        const whatsappMode = (process.env.WHATSAPP_DEEPLINK_ENABLED || '').toLowerCase() === 'true';
+        const shareUrl = whatsappMode ? `${baseUrl}/w/${shareId}` : `${baseUrl}/share/${shareId}`;
 
-        // Generate QR code
+        // Generate QR code (to WA redirect if whatsappMode)
         const qrCode = await generateQRCode(shareUrl);
 
         // Calculate total size

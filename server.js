@@ -27,6 +27,32 @@ const limiter = rateLimit({
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS) || 900000, // 15 minutes
     max: parseInt(process.env.RATE_LIMIT_MAX_REQUESTS) || 100
 });
+
+// WhatsApp redirect route: opens WhatsApp with prefilled message containing shareId
+app.get('/w/:shareId', async (req, res) => {
+    const { shareId } = req.params;
+    try {
+        const share = await db.getShare(shareId);
+        if (!share) {
+            return res.status(404).send('Share not found or expired');
+        }
+        await db.trackEvent('wa_redirect', shareId, req.get('user-agent'), req.ip);
+
+        const waNumber = process.env.WHATSAPP_BUSINESS_NUMBER; // in international format without +
+        const baseUrl = req.app.locals.baseUrl;
+        const shareUrl = `${baseUrl}/share/${shareId}`;
+        const text = encodeURIComponent(`Hi\nSHARE ${shareId}\n${shareUrl}`);
+
+        if (!waNumber) {
+            // Fallback to generic wa.me link without number
+            return res.redirect(`https://wa.me/?text=${text}`);
+        }
+        return res.redirect(`https://wa.me/${waNumber}?text=${text}`);
+    } catch (error) {
+        console.error('WA redirect error:', error);
+        return res.status(500).send('Error');
+    }
+});
 app.use('/api/', limiter);
 
 // Body parsing
@@ -40,6 +66,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/upload', require('./routes/upload'));
 app.use('/api/download', require('./routes/download'));
 app.use('/api/analytics', require('./routes/analytics'));
+app.use('/api/whatsapp', require('./routes/whatsapp'));
 
 // Share page route
 app.get('/share/:shareId', async (req, res) => {
